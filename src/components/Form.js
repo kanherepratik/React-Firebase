@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {Link} from 'react-router';
 
 export default class Form extends Component {
     constructor(props) {
@@ -12,15 +13,13 @@ export default class Form extends Component {
             .bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
+    
     handleSubmit = (event) => {
-        console.log(this.state.username, this.state.password);
         const user = {
             username:this.state.username,
             password:this.state.password
         }
-        if(user.username !== '' && user.password !== ''){
-            localStorage.setItem('user',JSON.stringify(user));
-        }
+        this.props.sendData(user);
         event.preventDefault();
     }
     handleChange = (event) => {
@@ -31,7 +30,8 @@ export default class Form extends Component {
     }
     render() {
         return (
-                <form onSubmit = {this.handleSubmit}>
+               <div>   
+                <form>
                     <div>
                         <label htmlFor="username">Username</label>
                         <input type="text" name="username" value={this.state.username} onChange ={this.handleChange}></input>  
@@ -39,10 +39,11 @@ export default class Form extends Component {
                     <div>
                         <label htmlFor="password">Password</label>
                         <input type="text" name="password" value={this.state.password} onChange ={this.handleChange}></input>  
-                    </div>      
-                    <input type="submit" value="Register"></input>          
+                    </div>   
+                    <Link to="/" onClick={this.handleSubmit}>Login</Link>    
+                    <Link to="/Register">Register</Link>        
                 </form>
-   
+              </div>  
         );
     }
 }

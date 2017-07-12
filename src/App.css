@@ -1,37 +1,50 @@
 .App {
-  text-align: center;
+    text-align: center;
+}
+
+.main {
+    width: 75%;
+    margin: 0 auto;
 }
 
 .App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+    animation: App-logo-spin infinite 20s linear;
+    height: 80px;
 }
 
 .App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+    background-color: #222;
+    height: 150px;
+    padding: 20px;
+    color: white;
 }
 
 .App-intro {
-  font-size: large;
+    font-size: large;
 }
+
 .App-Login {
- float: left;
-    border-right: 3px solid;
-    padding-right: 74px;
-    width: 600px;
-    padding: 53px;
-    margin: 0 auto;
-}
-.App-Register {
-      float: right;
-    width: 600px;
-    margin: 0 auto;
+    float: left;
     padding-top: 53px;
 }
+
+.App-Register {
+    float: right;
+    padding-top: 53px;
+}
+
 @keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/*helper class*/
+
+.clearFix {
+    clear: both;
 }
