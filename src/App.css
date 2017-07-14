@@ -23,10 +23,9 @@
     font-size: large;
 }
 
-.App-Login {
-    padding-top: 53px;
-    width: 500px;
-    margin: 0 auto;
+.App-Login,.App-SignUp {
+   width :45%;
+   margin: 0 auto;
 }
 
 .form-signin .form-control {

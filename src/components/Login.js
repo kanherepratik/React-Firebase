@@ -32,7 +32,7 @@ export default class Login extends Component {
   render() {
 
     return (
-      <div>
+      <div className="App-Login">
         <div>
           <h2>Login To Portal</h2>
         </div>

@@ -42,7 +42,7 @@ export default class SignUp extends Component {
   }
   render() {
     return (
-      <div>
+      <div className="App-SignUp">
         <div>
           <h2>Register To Portal</h2>
         </div>

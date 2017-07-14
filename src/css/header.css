@@ -1,0 +1,8 @@
+.user {
+    float: right;
+    margin: 0 !important;
+}
+.user-ico {
+    border-right: 1px solid black;  
+    padding: 10px;
+}
