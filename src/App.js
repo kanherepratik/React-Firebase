@@ -1,16 +1,12 @@
 import React, {Component} from 'react';
 import './css/reset.css';
 import './App.css';
-import Header from './components/Header'
-
+global.jQuery = require('jquery');
+require('bootstrap');
 class App extends Component {
-  
   render() {
     return (
-      <div className="App">
-        <div>
-              <Header/>
-        </div> 
+      <div className="App"> 
         <div className="">
             <div className="col-sm-12">
                 {this.props.children}

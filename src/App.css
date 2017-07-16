@@ -23,9 +23,10 @@
     font-size: large;
 }
 
-.App-Login,.App-SignUp {
-   width :45%;
-   margin: 0 auto;
+.App-Login,
+.App-SignUp {
+    width: 45%;
+    margin: 0 auto;
 }
 
 .form-signin .form-control {
@@ -53,13 +54,3 @@
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
-
-
-/*@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}*/

@@ -1,8 +1,53 @@
 .user {
     float: right;
-    margin: 0 !important;
 }
+
 .user-ico {
-    border-right: 1px solid black;  
     padding: 10px;
+}
+
+.vote {
+    margin: 25px 0px;
+}
+
+.team1 {
+    border-right: 3px inset black;
+}
+
+.team1 img,
+.team2 img {
+    width: 130px;
+}
+
+.MI {
+    background: url(../images/team-logo-large.png) no-repeat -100px -300px;
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+}
+
+.RCB {
+    background: url(../images/team-logo-large.png) no-repeat -300px -300px;
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+}
+
+.DD {
+    background: url(../images/team-logo-large.png) no-repeat -200px -100px;
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+}
+
+.GL {
+    background: url(../images/team-logo-large.png) no-repeat -100px -200px;
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+}
+
+.vote-box {
+    border-right: 3px groove;
+    background: grey;
 }
