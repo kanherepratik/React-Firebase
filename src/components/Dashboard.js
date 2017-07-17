@@ -5,6 +5,8 @@ import NewsFeed from './NewsFeed'
 import Vote from './VoteBanner'
 import Header from './Header'
 import VoteModal from './Modal'
+import matchStore from '../store/matchStore'
+import * as matchAction from "../actions/action"
 import '../css/header.css'
 import '../css/dashboard.css'
 import '../css/popupStyles.css'
@@ -13,34 +15,7 @@ export default class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      matches: [
-        {
-          team1: "Delhi Daredevils",
-          team2: "Gujrat Lions",
-          date: "14/07/2017",
-          time: "4:30 PM",
-          Venue: "Delhi",
-          shortName1: 'DD',
-          shortName2: 'GL'
-
-        }, {
-          team1: "Mumbai Indians",
-          team2: "Royal Challengers Banglore",
-          date: "17/07/2017",
-          time: "8:30 PM",
-          Venue: "Mumbai",
-          shortName1: 'MI',
-          shortName2: 'RCB'
-        }, {
-          team1: "Delhi Daredevils",
-          team2: "Gujrat Lions",
-          date: "17/07/2017",
-          time: "4:30 PM",
-          Venue: "Delhi",
-          shortName1: 'DD',
-          shortName2: 'GL'
-        }
-      ],
+      matches: matchStore.getAll(),
       count: 0,
       showModal: false
     };
@@ -48,6 +23,13 @@ export default class Dashboard extends Component {
     this.renderVote = this
       .renderVote
       .bind(this);
+  }
+  
+  componentWillMount() {
+    matchStore.on("change",() =>{
+      this.setState({matches: matchStore.getAll()
+      });
+    });
   }
   
   renderVote = () => {
@@ -115,7 +97,18 @@ export default class Dashboard extends Component {
       return null;
     }
   }
-
+  addMatch = () => {
+    const match = {
+          team1: "Delhi Daredevils",
+          team2: "Gujrat Lions",
+          date: "7/17/2017",
+          time: "4:30 PM",
+          Venue: "Delhi",
+          shortName1: 'DD',
+          shortName2: 'GL'
+        };
+    matchAction.addMatch(match);
+  }
   render() {
     return (
       <div>
