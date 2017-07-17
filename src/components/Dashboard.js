@@ -15,23 +15,22 @@ export default class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      matches: matchStore.getAll(),
+      matches: [],
       count: 0,
       showModal: false
     };
-
     this.renderVote = this
       .renderVote
       .bind(this);
   }
-  
-  componentWillMount() {
-    matchStore.on("change",() =>{
-      this.setState({matches: matchStore.getAll()
-      });
-    });
+  componentDidMount() {
+    matchAction.GetMatches();
   }
-  
+  componentWillMount() {
+    matchStore.on("change",()=>{
+      this.setState({matches:matchStore.getAll()})
+    })
+  }
   renderVote = () => {
     let count = 0;
     let match = [];
@@ -96,18 +95,6 @@ export default class Dashboard extends Component {
     } else {
       return null;
     }
-  }
-  addMatch = () => {
-    const match = {
-          team1: "Delhi Daredevils",
-          team2: "Gujrat Lions",
-          date: "7/17/2017",
-          time: "4:30 PM",
-          Venue: "Delhi",
-          shortName1: 'DD',
-          shortName2: 'GL'
-        };
-    matchAction.addMatch(match);
   }
   render() {
     return (
