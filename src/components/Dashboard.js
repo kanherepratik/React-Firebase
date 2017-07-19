@@ -5,12 +5,14 @@ import NewsFeed from './NewsFeed'
 import Vote from './VoteBanner'
 import Header from './Header'
 import VoteModal from './Modal'
-import matchStore from '../store/matchStore'
-import * as matchAction from "../actions/action"
+// import matchStore from '../store/matchStore'
+// import * as matchAction from "../actions/action"
 import '../css/header.css'
 import '../css/dashboard.css'
 import '../css/popupStyles.css'
+import fire from '../fire'
 
+let user;
 export default class Dashboard extends Component {
   constructor(props) {
     super(props);
@@ -24,12 +26,25 @@ export default class Dashboard extends Component {
       .bind(this);
   }
   componentDidMount() {
-    matchAction.GetMatches();
+    //matchAction.GetMatches();
+    
   }
   componentWillMount() {
-    matchStore.on("change",()=>{
-      this.setState({matches:matchStore.getAll()})
-    })
+    /* matchStore.on("change", () => {
+      this.setState({
+        matches: matchStore.getAll()
+      })
+    }) */
+    const matches =[];
+    const matchesRef = fire.database().ref('match');
+    user = fire.auth().currentUser;
+    matchesRef
+      .on("child_added", dataSnapshot => {
+          matches
+          .push(dataSnapshot.val());
+        this.setState({matches: matches});
+        console.log(dataSnapshot.val());
+      });
   }
   renderVote = () => {
     let count = 0;
@@ -47,6 +62,7 @@ export default class Dashboard extends Component {
     if (count === 1) {
       return <div className="clearfix">
         <div className="col-sm-12"><Vote
+          match={match}
           team1={match[0].team1}
           team2={match[0].team2}
           date={match[0].date}
@@ -54,16 +70,12 @@ export default class Dashboard extends Component {
           time={match[0].time}
           shortName1={match[0].shortName1}
           shortName2={match[0].shortName2}/>
-          <button
-            type="button"
-            className="btn btn-info"
-            data-toggle="modal"
-            data-target="#myModal">Vote Now</button>
         </div>
       </div>;
     } else if (count === 2) {
       return <div className="clearfix">
         <div className="col-sm-6 vote-box"><Vote
+        match={match}
           team1={match[0].team1}
           team2={match[0].team2}
           date={match[0].date}
@@ -71,13 +83,9 @@ export default class Dashboard extends Component {
           time={match[0].time}
           shortName1={match[0].shortName1}
           shortName2={match[0].shortName2}/>
-          <button
-            type="button"
-            className="btn btn-info"
-            data-toggle="modal"
-            data-target="#myModal">Vote Now</button>
         </div>
         <div className="col-sm-6"><Vote
+        match={match}
           team1={match[1].team1}
           team2={match[1].team2}
           date={match[1].date}
@@ -85,11 +93,6 @@ export default class Dashboard extends Component {
           time={match[1].time}
           shortName1={match[1].shortName1}
           shortName2={match[1].shortName2}/>
-          <button
-            type="button"
-            className="btn btn-info"
-            data-toggle="modal"
-            data-target="#myModal">Vote Now</button>
         </div>
       </div>;
     } else {
@@ -99,16 +102,21 @@ export default class Dashboard extends Component {
   render() {
     return (
       <div>
-        <VoteModal></VoteModal>
+        
         <div className="row">
           <div className="col-sm-12">
-            <Header/>
+            <Header user={user}/>
           </div>
         </div>
         <div className="row vote-box">
           <div className="col-sm-12">
             <div className="container">
               {this.renderVote()}
+              <button
+            type="button"
+            className="btn btn-info"
+            data-toggle="modal"
+            data-target="#myModal">Vote Now</button>
             </div>
           </div>
         </div>

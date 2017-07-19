@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Input from '../components/Input'
 import Button from '../components/Button'
+import fire from '../fire';
 
 export default class SignUp extends Component {
   constructor() {
@@ -35,6 +36,13 @@ export default class SignUp extends Component {
       this.setState({toggleMsg: true});
     }
     event.preventDefault();
+    fire.auth().createUserWithEmailAndPassword(user.username, user.password).catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // ...
+      console.log(errorMessage,errorCode);
+    });
   }
   handleChange = (event) => {
     const name = event.target.name;

@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import Input from '../components/Input'
 import Button from '../components/Button'
 import {browserHistory} from 'react-router'
+// import {withRouter} from 'react-router';
+import fire from '../fire'
+import {Link} from 'react-router';
 
 export default class Login extends Component {
   constructor() {
@@ -17,13 +20,36 @@ export default class Login extends Component {
       .handleSubmit
       .bind(this);
   }
+  componentDidMount() {}
   handleSubmit = (event) => {
     event.preventDefault();
-    const regUser = JSON.parse(localStorage.getItem('user'));
+    /* const regUser = JSON.parse(localStorage.getItem('user'));
     for (let i = 0; i < regUser.length; i++) {
       if (this.state.username === regUser[i].username && this.state.password === regUser[i].password) {
-          browserHistory.push('/Dashboard')}
-    }
+        browserHistory.push('/Dashboard')
+      }
+    } */
+    fire
+      .auth()
+      .signInWithEmailAndPassword(this.state.username, this.state.password)
+      .catch(function (error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorMessage, errorCode);
+        alert("invalid username or password");
+      });
+    fire
+      .auth()
+      .onAuthStateChanged(function (user) {
+        if (user) {
+          // User is signed in.
+          browserHistory.push('/dashboard')
+        } else {
+          // No user is signed in.
+        }
+      });
+     
   }
   handleChange = (event) => {
     const name = event.target.name;
@@ -34,7 +60,7 @@ export default class Login extends Component {
     return (
       <div className="App-Login">
         <div>
-          <h2>Login To Portal</h2>
+          <h2>SIGN IN</h2>
         </div>
         <form className="form-signin" action="">
           <Input
@@ -50,8 +76,13 @@ export default class Login extends Component {
             placeHolder="Password"
             handleChange={this.handleChange}/>
         </form>
-        <Button name="Login" path="" handleSubmit={this.handleSubmit}/>
-        <Button name="Register" path="/Register"/>
+        <div>
+          <Link to="/forgot">Forgot Password?</Link>
+        </div>
+        <div>
+          <Button name="Register" path="/Register"/>
+          <Button name="Login" path="" handleSubmit={this.handleSubmit}/>
+        </div>
       </div>
 
     );
