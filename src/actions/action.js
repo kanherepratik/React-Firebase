@@ -4,7 +4,7 @@ import $ from 'jquery'
 export function GetMatches() {
   dispatcher.dispatch({type: "FETCH_DATA"});
   $
-    .ajax({url: "http://localhost:3000/match", method: 'GET'})
+    .ajax({url: "http://localhost:3001/api/matches", method: 'GET'})
     .then(function (data) {
       dispatcher.dispatch({type: "GET_MATCH", match: data})
     });
