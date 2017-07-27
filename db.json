@@ -2,7 +2,7 @@
     "match": [{
         "team1": "Delhi Daredevils",
         "team2": "Gujrat Lions",
-        "date": "7/17/2017",
+        "date": "18/07/2017",
         "time": "4:30 PM",
         "Venue": "Delhi",
         "shortName1": "DD",
@@ -11,7 +11,7 @@
     }, {
         "team1": "Mumbai Indians",
         "team2": "Royal Challengers Banglore",
-        "date": "18/07/2017",
+        "date": "19/07/2017",
         "time": "8:30 PM",
         "Venue": "Mumbai",
         "shortName1": "MI",

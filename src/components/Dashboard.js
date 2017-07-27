@@ -14,11 +14,10 @@ import fire from '../fire'
 
 let user;
 export default class Dashboard extends Component {
-  constructor(props) {
+ constructor(props) {
     super(props);
     this.state = {
       matches: [],
-      count: 0,
       showModal: false
     };
     this.renderVote = this
@@ -46,6 +45,23 @@ export default class Dashboard extends Component {
         console.log(dataSnapshot.val());
       });
   }
+    recordVote = (e) => {
+    if (e.target.name === this.state.matches[0]._id) {
+      this.setState({vote1:e.target.value});
+    }
+    if (e.target.name === this.state.matches[1]._id) {
+      this.setState({vote2:e.target.value});
+    }
+  }
+   submitVote=()=>{
+    console.log(this.state.vote1,this.state.vote2);
+    let vote={
+      vote1:this.state.vote1,
+      vote2:this.state.vote2
+    }
+    alert("vote Submitted")
+    // matchAction.recordVotes(vote);
+  }
   renderVote = () => {
     let count = 0;
     let match = [];
@@ -69,7 +85,13 @@ export default class Dashboard extends Component {
           Venue={match[0].Venue}
           time={match[0].time}
           shortName1={match[0].shortName1}
-          shortName2={match[0].shortName2}/>
+          shortName2={match[0].shortName2}
+          recordVote={this
+        .recordVote
+        .bind(this)}
+        submitVote={this
+        .submitVote
+        .bind(this)}/>
         </div>
       </div>;
     } else if (count === 2) {
@@ -82,7 +104,13 @@ export default class Dashboard extends Component {
           Venue={match[0].Venue}
           time={match[0].time}
           shortName1={match[0].shortName1}
-          shortName2={match[0].shortName2}/>
+          shortName2={match[0].shortName2}
+          recordVote={this
+        .recordVote
+        .bind(this)}
+        submitVote={this
+        .submitVote
+        .bind(this)}/>
         </div>
         <div className="col-sm-6"><Vote
         match={match}
@@ -92,7 +120,13 @@ export default class Dashboard extends Component {
           Venue={match[1].Venue}
           time={match[1].time}
           shortName1={match[1].shortName1}
-          shortName2={match[1].shortName2}/>
+          shortName2={match[1].shortName2}
+          recordVote={this
+        .recordVote
+        .bind(this)}
+        submitVote={this
+        .submitVote
+        .bind(this)}/>
         </div>
       </div>;
     } else {
@@ -105,7 +139,7 @@ export default class Dashboard extends Component {
         
         <div className="row">
           <div className="col-sm-12">
-            <Header user={user}/>
+            <Header user={user.email}/>
           </div>
         </div>
         <div className="row vote-box">

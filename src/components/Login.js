@@ -42,11 +42,12 @@ export default class Login extends Component {
     fire
       .auth()
       .onAuthStateChanged(function (user) {
-        if (user) {
+        if (user.email) {
           // User is signed in.
           browserHistory.push('/dashboard')
         } else {
           // No user is signed in.
+          browserHistory.push('/')
         }
       });
      

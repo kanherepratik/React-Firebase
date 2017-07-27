@@ -20,7 +20,7 @@ export default class Vote extends Component {
             </figure>
           </div>
         </div>
-        <VoteModal match={this.props.match}></VoteModal>
+        <VoteModal match={this.props.match} recordVote={this.props.recordVote} submitVote={this.props.submitVote}></VoteModal>
       </div>
 
     );
