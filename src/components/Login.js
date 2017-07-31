@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import Input from '../components/Input'
 import Button from '../components/Button'
 import {browserHistory} from 'react-router'
-// import {withRouter} from 'react-router';
 import fire from '../fire'
 import {Link} from 'react-router';
 
@@ -21,43 +20,34 @@ export default class Login extends Component {
       .bind(this);
   }
   componentDidMount() {}
+
   handleSubmit = (event) => {
     event.preventDefault();
-    /* const regUser = JSON.parse(localStorage.getItem('user'));
-    for (let i = 0; i < regUser.length; i++) {
-      if (this.state.username === regUser[i].username && this.state.password === regUser[i].password) {
-        browserHistory.push('/Dashboard')
-      }
-    } */
     fire
       .auth()
       .signInWithEmailAndPassword(this.state.username, this.state.password)
+      .then(function () {
+        fire
+          .auth()
+          .onAuthStateChanged(user => {
+            browserHistory.replace('/dashboard');
+          });
+      })
       .catch(function (error) {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
         console.log(errorMessage, errorCode);
-        alert("invalid username or password");
+        alert(errorMessage);
+        browserHistory.push('/');
+
       });
-    fire
-      .auth()
-      .onAuthStateChanged(function (user) {
-        if (user.email) {
-          // User is signed in.
-          browserHistory.push('/dashboard')
-        } else {
-          // No user is signed in.
-          browserHistory.push('/')
-        }
-      });
-     
   }
   handleChange = (event) => {
     const name = event.target.name;
     this.setState({[name]: event.target.value});
   }
   render() {
-
     return (
       <div className="App-Login">
         <div>
@@ -76,14 +66,15 @@ export default class Login extends Component {
             value={this.state.password}
             placeHolder="Password"
             handleChange={this.handleChange}/>
+          <div>
+            <Link to="/forgot">Forgot Password?</Link>
+          </div>
+          <div>
+            <Button name="Register" path="/Register"/>
+            <Button name="Login" path="" handleSubmit={this.handleSubmit}/>
+          </div>
         </form>
-        <div>
-          <Link to="/forgot">Forgot Password?</Link>
-        </div>
-        <div>
-          <Button name="Register" path="/Register"/>
-          <Button name="Login" path="" handleSubmit={this.handleSubmit}/>
-        </div>
+
       </div>
 
     );

@@ -5,59 +5,92 @@ import NewsFeed from './NewsFeed'
 import Vote from './VoteBanner'
 import Header from './Header'
 import VoteModal from './Modal'
-// import matchStore from '../store/matchStore'
-// import * as matchAction from "../actions/action"
+import {browserHistory} from 'react-router'
+// import matchStore from '../store/matchStore' import * as matchAction from
+// "../actions/action"
 import '../css/header.css'
 import '../css/dashboard.css'
 import '../css/popupStyles.css'
 import fire from '../fire'
 
-let user;
+let name = '';
 export default class Dashboard extends Component {
- constructor(props) {
+  constructor(props) {
     super(props);
     this.state = {
       matches: [],
-      showModal: false
+      showModal: false,
+      user: ''
     };
+
     this.renderVote = this
       .renderVote
       .bind(this);
+    this.recordVote = this
+      .recordVote
+      .bind(this);
+    this.submitVote = this
+      .submitVote
+      .bind(this);
+    this.logout = this
+      .logout
+      .bind(this);
   }
   componentDidMount() {
-    //matchAction.GetMatches();
-    
-  }
-  componentWillMount() {
-    /* matchStore.on("change", () => {
+    const matchRef = fire
+      .database()
+      .ref('match');
+    const userRef = fire
+      .database()
+      .ref('users');
+    matchRef.on("value", dataSnapshot => {
       this.setState({
-        matches: matchStore.getAll()
-      })
-    }) */
-    const matches =[];
-    const matchesRef = fire.database().ref('match');
-    user = fire.auth().currentUser;
-    matchesRef
-      .on("child_added", dataSnapshot => {
-          matches
-          .push(dataSnapshot.val());
-        this.setState({matches: matches});
-        console.log(dataSnapshot.val());
+        matches: dataSnapshot.val()
+      });
+      // console.log(dataSnapshot.val());
+    });
+
+    fire
+      .auth()
+      .onAuthStateChanged((user) => {
+        if (user) {
+          userRef.once('value', dataSnapshot => {
+            console.log(dataSnapshot.val());
+            if (dataSnapshot.val() === user.uid) {
+              console.log(dataSnapshot.val());
+            }
+          })
+          // name = user.email; this.setState({user: name}) console.log(user.email);
+        } else {
+          browserHistory.replace('/');
+        }
       });
   }
-    recordVote = (e) => {
+  componentWillMount() {}
+  logout = () => {
+    fire
+      .auth()
+      .signOut()
+      .then(function () {
+        browserHistory.replace('/');
+      })
+      .catch(function (error) {
+        console.log("oops! Something not right here...");
+      });
+  }
+  recordVote = (e) => {
     if (e.target.name === this.state.matches[0]._id) {
-      this.setState({vote1:e.target.value});
+      this.setState({vote1: e.target.value});
     }
     if (e.target.name === this.state.matches[1]._id) {
-      this.setState({vote2:e.target.value});
+      this.setState({vote2: e.target.value});
     }
   }
-   submitVote=()=>{
-    console.log(this.state.vote1,this.state.vote2);
-    let vote={
-      vote1:this.state.vote1,
-      vote2:this.state.vote2
+  submitVote = () => {
+    console.log(this.state.vote1, this.state.vote2);
+    let vote = {
+      vote1: this.state.vote1,
+      vote2: this.state.vote2
     }
     alert("vote Submitted")
     // matchAction.recordVotes(vote);
@@ -69,11 +102,10 @@ export default class Dashboard extends Component {
       .state
       .matches
       .map(function (obj, i) {
-        if (obj.date === new Date().toLocaleDateString()) {
-          count = count + 1;
-          match.push(obj);
-        }
-        return 0;
+        //   if (obj.date === new Date().toLocaleDateString()) {
+        count = count + 1;
+        match.push(obj);
+        // } return 0;
       });
     if (count === 1) {
       return <div className="clearfix">
@@ -86,18 +118,14 @@ export default class Dashboard extends Component {
           time={match[0].time}
           shortName1={match[0].shortName1}
           shortName2={match[0].shortName2}
-          recordVote={this
-        .recordVote
-        .bind(this)}
-        submitVote={this
-        .submitVote
-        .bind(this)}/>
+          recordVote={this.recordVote}
+          submitVote={this.submitVote}/>
         </div>
       </div>;
     } else if (count === 2) {
       return <div className="clearfix">
         <div className="col-sm-6 vote-box"><Vote
-        match={match}
+          match={match}
           team1={match[0].team1}
           team2={match[0].team2}
           date={match[0].date}
@@ -105,15 +133,11 @@ export default class Dashboard extends Component {
           time={match[0].time}
           shortName1={match[0].shortName1}
           shortName2={match[0].shortName2}
-          recordVote={this
-        .recordVote
-        .bind(this)}
-        submitVote={this
-        .submitVote
-        .bind(this)}/>
+          recordVote={this.recordVote}
+          submitVote={this.submitVote}/>
         </div>
         <div className="col-sm-6"><Vote
-        match={match}
+          match={match}
           team1={match[1].team1}
           team2={match[1].team2}
           date={match[1].date}
@@ -121,12 +145,8 @@ export default class Dashboard extends Component {
           time={match[1].time}
           shortName1={match[1].shortName1}
           shortName2={match[1].shortName2}
-          recordVote={this
-        .recordVote
-        .bind(this)}
-        submitVote={this
-        .submitVote
-        .bind(this)}/>
+          recordVote={this.recordVote}
+          submitVote={this.submitVote}/>
         </div>
       </div>;
     } else {
@@ -136,10 +156,9 @@ export default class Dashboard extends Component {
   render() {
     return (
       <div>
-        
         <div className="row">
           <div className="col-sm-12">
-            <Header user={user.email}/>
+            <Header user={this.state.user} logout={this.logout}/>
           </div>
         </div>
         <div className="row vote-box">
@@ -147,10 +166,10 @@ export default class Dashboard extends Component {
             <div className="container">
               {this.renderVote()}
               <button
-            type="button"
-            className="btn btn-info"
-            data-toggle="modal"
-            data-target="#myModal">Vote Now</button>
+                type="button"
+                className="btn btn-info"
+                data-toggle="modal"
+                data-target="#myModal">Vote Now</button>
             </div>
           </div>
         </div>
