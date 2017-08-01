@@ -24,26 +24,16 @@ export default class SignUp extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    const user = {
+    const newUser = {
       username: this.state.username,
       password: this.state.password,
       name: this.state.name
     };
-    if (!user.username === '' && !user.password === '') {
+    if (!newUser.username === '' && !newUser.password === '') {
       this.setState({toggleBtn: true});
     }
-    const db = fire.database();
-    const UserData = {
-      name: user.name,
-      totalScore: 0,
-      ranking: 0,
-      prediction: [],
-      authorPic: 'picture',
-      vote:{
-        vote1:'',
-        vote2:''
-      }
-    };
+    // const db = fire.database();
+
     var newUserKey = fire
       .database()
       .ref()
@@ -53,15 +43,28 @@ export default class SignUp extends Component {
 
     fire
       .auth()
-      .createUserWithEmailAndPassword(user.username, user.password)
+      .createUserWithEmailAndPassword(newUser.username, newUser.password)
       .then((user) => {
         var updates = {};
+        const UserData = {
+          id:user.uid,
+          name: newUser.name,
+          totalScore: 0,
+          ranking: 0,
+          prediction: {},
+          authorPic: 'picture',
+          vote: {
+            vote1: '',
+            vote2: ''
+          }
+        };
         updates['/users/' + user.uid] = UserData;
-        browserHistory.push('/');
         return fire
           .database()
           .ref()
-          .update(updates);
+          .update(updates).then(()=>{
+            browserHistory.push('/');
+          });
         //console.log(user);
       })
       .catch(function (error) {

@@ -24,14 +24,14 @@ export default class VoteModal extends Component {
                         <label><input
                           type="radio"
                           value={item.team1}
-                          name={item._id}
+                          name={item.Venue}
                           onChange={this.props.recordVote}/>{item.team1}</label>
                       </div>
                       <div className="radio">
                         <label><input
                           type="radio"
                           value={item.team2}
-                          name={item._id}
+                          name={item.Venue}
                           onChange={this.props.recordVote}/>{item.team2}</label>
                       </div>
                     </form>

@@ -4,7 +4,7 @@ import Chart from './Chart'
 import NewsFeed from './NewsFeed'
 import Vote from './VoteBanner'
 import Header from './Header'
-import VoteModal from './Modal'
+// import VoteModal from './Modal'
 import {browserHistory} from 'react-router'
 // import matchStore from '../store/matchStore' import * as matchAction from
 // "../actions/action"
@@ -13,7 +13,7 @@ import '../css/dashboard.css'
 import '../css/popupStyles.css'
 import fire from '../fire'
 
-let name = '';
+// let name = '';
 export default class Dashboard extends Component {
   constructor(props) {
     super(props);
@@ -43,24 +43,24 @@ export default class Dashboard extends Component {
     const userRef = fire
       .database()
       .ref('users');
-    matchRef.on("value", dataSnapshot => {
+    matchRef.once("value", dataSnapshot => {
       this.setState({
         matches: dataSnapshot.val()
       });
-      // console.log(dataSnapshot.val());
     });
-
     fire
       .auth()
       .onAuthStateChanged((user) => {
         if (user) {
           userRef.once('value', dataSnapshot => {
-            console.log(dataSnapshot.val());
-            if (dataSnapshot.val() === user.uid) {
-              console.log(dataSnapshot.val());
-            }
+            dataSnapshot.forEach((item) => {
+              if (item.val().id === user.uid) {
+                this.setState({
+                  user: item.val()
+                })
+              }
+            });
           })
-          // name = user.email; this.setState({user: name}) console.log(user.email);
         } else {
           browserHistory.replace('/');
         }
@@ -79,10 +79,10 @@ export default class Dashboard extends Component {
       });
   }
   recordVote = (e) => {
-    if (e.target.name === this.state.matches[0]._id) {
+    if (e.target.name === this.state.matches[0].Venue) {
       this.setState({vote1: e.target.value});
     }
-    if (e.target.name === this.state.matches[1]._id) {
+    if (e.target.name === this.state.matches[1].Venue) {
       this.setState({vote2: e.target.value});
     }
   }
@@ -91,8 +91,29 @@ export default class Dashboard extends Component {
     let vote = {
       vote1: this.state.vote1,
       vote2: this.state.vote2
+    };
+    const matches = this.state.matches;
+    let prediction = {};
+    for (let i = 0; i < matches.length; i++) {
+       matches[i].matchNo = {
+        team1: matches[i].team1,
+        team2: matches[i].team2,
+        vote: vote.vote + (i + 1)
+      }
+
     }
-    alert("vote Submitted")
+
+    var db = fire.database();
+    db
+      .ref("users/" + this.state.user.id)
+      .orderByChild("id")
+      .equalTo(this.state.user.id)
+      .once("value", (snapShot) => {
+        snapShot
+          .ref
+          .update({vote: vote, prediction: prediction});
+      })
+    console.log("vote Submitted", vote);
     // matchAction.recordVotes(vote);
   }
   renderVote = () => {
@@ -105,6 +126,7 @@ export default class Dashboard extends Component {
         //   if (obj.date === new Date().toLocaleDateString()) {
         count = count + 1;
         match.push(obj);
+        console.log(match);
         // } return 0;
       });
     if (count === 1) {
@@ -158,7 +180,7 @@ export default class Dashboard extends Component {
       <div>
         <div className="row">
           <div className="col-sm-12">
-            <Header user={this.state.user} logout={this.logout}/>
+            <Header user={this.state.user.name} logout={this.logout}/>
           </div>
         </div>
         <div className="row vote-box">
